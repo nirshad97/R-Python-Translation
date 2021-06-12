@@ -28,12 +28,5 @@ data.head()
 
 
 pd.wide_to_long(data, stubnames="show_type", i="viewers_premier", j="total_views" )
-
-
-
-df = pd.DataFrame(data={'GameID': [1, 2], 'Date': ['9/10/2020', '9/13/2020'], 'Visitor': ['Houston Texans', 'Seattle Seahawks'], 'Score_V': [20,38], 'Home':['Kansas City Chiefs', 'Atlanta Falcons'], 'Score_H':[34,25]})
-df
-
-df2 = pd.DataFrame(data={'GameID': [1, 1, 2, 2], 'Date': ['9/10/2020', '9/10/2020', '9/13/2020', '9/13/2020'], 'Team': ['Houston Texans', 'Kansas City Chiefs', 'Seattle Seahawks', 'Atlanta Falcons'], 'Location':['Away', 'Home', 'Away', 'Home'], 'Score': [20,34,38,25]})
-df2
+# How to????
 
