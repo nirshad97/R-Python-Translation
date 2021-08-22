@@ -1,0 +1,75 @@
+---
+title: "Netflix Titles"
+author: "Nirshad"
+date: "8/22/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(tidytuesdayR)
+library(scales)
+
+theme_set(theme_light())
+```
+
+```{r load}
+tt <- tt_load("2021-04-20")
+
+
+netflix_titles <- tt$netflix_titles %>% 
+  separate(duration, c("duration", "duration_units"), sep = " ", convert = T )
+```
+
+
+```{r}
+netflix_titles %>% 
+  filter(type=="Movie") %>% 
+  mutate(len = str_length(gsub("([^A-Za-z0-9 ])+", "", x = title))) %>% 
+  arrange(desc(duration)) %>% 
+  head(10) %>% 
+  mutate(title = fct_reorder(title, duration)) %>% 
+  ggplot(aes(y=title, x=duration)) + 
+  geom_segment(aes(x=150, xend=duration, y=title, yend=title), 
+               size=1, color="#E50914") + 
+  geom_text(aes(x=duration-4, y=title, label=title), 
+            size=3.5, hjust=1, vjust=0, nudge_x = -0.5, nudge_y = 0.25,
+            family="Roboto Light", color="#E0C097") + 
+  geom_point(aes(size=duration), color="#E50914") + 
+  geom_text(aes(x=duration, y=title, label=duration), 
+            color="white", size=2.5, nudge_x = 0.3, nudge_y = 0.01,
+            family="Roboto Light", color="#E0C097") + 
+  scale_size(range = c(7, 10), guide="none") + 
+  scale_x_continuous(breaks=seq(150, 310, 10)) + 
+  labs(title="Top 10 Longest Netflix Movies", 
+       y="",
+       x="Duration (mins)",
+       caption = "Data Source | Kaggle.com") + 
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.border = element_blank(),
+        axis.line.x = element_line(color="#E0C097", 
+                                   lineend = "round",
+                                   size=1),
+        axis.ticks.x = element_line(color="#E0C097"),
+        panel.grid = element_blank(),
+        plot.background = element_rect(fill="#261C2C"),
+        panel.background = element_rect(fill="#261C2C"),
+        axis.text.x = element_text(margin=margin(t=5), 
+                                   family = "Roboto Light",
+                                   color="#E0C097"),
+        axis.title.x = element_text(margin=margin(t=10), 
+                                   family = "Rubik",
+                                   color="white"),
+        plot.title = element_text(margin=margin(t=10, b=10), 
+                                  hjust = 0.5, size=16, 
+                                  family = "Rubik SemiBold", color="white"),
+        plot.caption = element_text(family="Rubik", color="white"))
+  
+
+
+ggsave("netflix.png", dpi=350)
+```
+
